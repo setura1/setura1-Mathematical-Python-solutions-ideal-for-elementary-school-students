@@ -1,0 +1,78 @@
+import numpy as np
+
+# x: 葉の表の蒸散量 (evaporation from leaf surface) [cm³]
+# y: 葉の裏の蒸散量 (evaporation from underside of the leaf) [cm³]
+# z: 茎の蒸散量 (evaporation from the stem) [cm³]
+# d = 0.2 水面からの蒸散量 (evaporation from the water surface) [cm³]
+
+# 連立方程式の係数行列Aと定数ベクトルbを定義
+# Define the coefficient matrix A and the constants vector b
+A = np.array([[1.5, 4.5, 0.8, 1],    # 試験管A
+              [0, 4.5, 0.8, 1],      # 試験管B
+              [1.5, 0, 0.8, 0.2],    # 試験管C
+              [0, 0, 0.8, 1]])       # 試験管D
+
+# b: 減った水の量 (amount of water lost) [cm³]
+b = np.array([7.0, 5.5, 2.5, 1.0])
+
+# 1. 逆行列を使って連立方程式を解く
+# 1. Solve the system using the inverse of the matrix (if possible)
+try:
+    A_inv = np.linalg.inv(A)  # 係数行列Aの逆行列を計算
+    solution = np.dot(A_inv, b)  # 逆行列を使って解を求める
+except np.linalg.LinAlgError as e:
+    solution = str(e)  # 逆行列が存在しない場合のエラー処理
+
+# 2. 行列の対角化（固有値と固有ベクトルの計算）
+# 2. Diagonalize the matrix (eigenvalues and eigenvectors)
+try:
+    eigvals, eigvecs = np.linalg.eig(A)  # 固有値と固有ベクトルを計算
+    diagonalized = np.diag(eigvals)  # 固有値を使って対角行列を作成
+except np.linalg.LinAlgError as e:
+    diagonalized = str(e)  # 対角化できない場合のエラー処理
+
+# 結果を表示
+# Output the results
+
+# 連立方程式を表示
+# Display the system of equations
+print("連立方程式 (System of equations):")
+print("1.5x + 4.5y + 0.8z + d = 7.0")
+print("     4.5y + 0.8z + d = 5.5")
+print("1.5x       + 0.8z + 0.2d = 2.5")
+print("               0.8z + d = 1.0")
+
+# 行列表示
+# Display the matrix form
+print("\n行列表示 (Matrix representation):")
+print("A (係数行列, Coefficient matrix):")
+print(A)
+print("\nb (定数ベクトル, Constants vector):")
+print(b)
+
+# 連立方程式の解を表示
+# Output the solution
+print("\n連立方程式の解 (Solution to the system) [cm³]:")
+if isinstance(solution, str):
+    print(f"Error: {solution}")
+else:
+    print(f"x (表の蒸散量, evaporation from leaf surface): {solution[0]:.2f} cm³")
+    print(f"y (裏の蒸散量, evaporation from leaf underside): {solution[1]:.2f} cm³")
+    print(f"z (茎の蒸散量, evaporation from stem): {solution[2]:.2f} cm³")
+    print(f"d (水面からの蒸散量, evaporation from water surface): {solution[3]:.2f} cm³")
+
+# 逆行列を表示
+# Output the inverse matrix
+print("\n逆行列 (Inverse of A):")
+if isinstance(A_inv, str):
+    print(f"Error: {A_inv}")
+else:
+    print(A_inv)
+
+# 対角行列を表示
+# Output the diagonalized matrix
+print("\n対角行列 (Diagonalized matrix):")
+if isinstance(diagonalized, str):
+    print(f"Error: {diagonalized}")
+else:
+    print(diagonalized)
