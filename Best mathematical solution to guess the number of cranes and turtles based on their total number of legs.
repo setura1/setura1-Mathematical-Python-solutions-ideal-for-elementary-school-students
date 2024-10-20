@@ -1,0 +1,100 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+# 定数の定義
+a = 1  # x + y の係数
+b = 1  # y の係数
+c = 4  # 鶴の足の本数
+d = 2  # 亀の足の本数
+A = 100  # x + y = 100 の定数項
+B = 274  # 4x + 2y = 274 の定数項
+
+# 連立方程式の表示
+print(f"連立方程式:\n")
+print(f"1) x + y = {A}")
+print(f"2) {c}x + {d}y = {B}")
+
+# 連立方程式を行列形式で表す
+matrix = np.array([[a, b], [c, d]])  # 係数行列
+constants = np.array([A, B])  # 定数項
+
+# 行列形式の表示
+print("\n行列形式:")
+print(f"[{a} {b}]   [x]   =   [{A}]")
+print(f"[{c} {d}]   [y]       [{B}]\n")
+
+# 逆行列を求める
+inv_matrix = np.linalg.inv(matrix)
+
+# 係数行列と定数項の表示
+print("行列形式 (数値):")
+print("係数行列:")
+print(matrix)
+print("\n定数項:")
+print(constants)
+
+# 逆行列を表示
+print("\n逆行列:")
+print(inv_matrix)
+
+# x, yを求める
+solution = np.dot(inv_matrix, constants)
+x, y = solution[0], solution[1]
+
+# 解の表示（単位を追加）
+print(f"\n解: Turtles (x) = {x} turtles, Cranes (y) = {y} cranes")
+
+# 固有値を求める
+eigenvalues, eigenvectors = np.linalg.eig(matrix)
+
+# 固有値の表示
+print("\n固有値:")
+print(eigenvalues)
+
+# 固有ベクトルの表示
+print("\n固有ベクトル:")
+print(eigenvectors)
+
+# x+y と 4x+2y の計算による検算
+check1 = x + y
+check2 = 4 * x + 2 * y
+
+# 検算結果の表示
+print(f"\n検算結果:")
+print(f"Check 1 (x + y) = {check1} (Expected: {A})")
+print(f"Check 2 (4x + 2y) = {check2} (Expected: {B})")
+
+# x を X, y を Y とする
+X = x
+Y = y
+
+# 赤と青の長方形の点の座標（個数と足の本数）
+points_red = [(0, 0), (X, 0), (X, A), (0, A)]  # 亀に対応
+points_blue = [(X, 0), (X + Y, 0), (X + Y, B), (X, B)]  # 鶴に対応
+
+# 赤領域を塗りつぶす
+plt.fill(*zip(*points_red), color='red', alpha=0.5, label='Turtle Area')
+
+# 青領域を塗りつぶす
+plt.fill(*zip(*points_blue), color='blue', alpha=0.5, label='Crane Area')
+
+# 点のプロット（赤と青の領域の頂点をプロット）
+plt.scatter(*zip(*points_red), color='red', edgecolor='black', label='Turtle Points')
+plt.scatter(*zip(*points_blue), color='blue', edgecolor='black', label='Crane Points')
+
+# 各頂点に座標ラベルを表示（単位を追加）
+for point in points_red:
+    plt.text(point[0], point[1], f'({point[0]} animals, {point[1]} legs)', fontsize=9, ha='right', va='bottom', color='black')
+
+for point in points_blue:
+    plt.text(point[0], point[1], f'({point[0]} animals, {point[1]} legs)', fontsize=9, ha='right', va='bottom', color='black')
+
+# プロットの設定
+plt.xlabel('Number of Animals')  # 横軸：動物の個数
+plt.ylabel('Number of Legs')  # 縦軸：足の本数
+plt.title('Turtle and Crane Rectangular Area Diagram')  # 長方形の面積図タイトル
+plt.legend()
+plt.grid(True)
+
+# プロットを表示
+plt.show()
