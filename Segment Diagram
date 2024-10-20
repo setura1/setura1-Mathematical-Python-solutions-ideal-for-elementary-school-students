@@ -1,0 +1,91 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+# ① 和差算 (赤い金魚と青い金魚)
+# 連立方程式を行列で表現
+# 係数行列 A と結果ベクトル B
+A1 = np.array([[1, 1], [1, -1]])  # 行列A1: 係数行列
+B1 = np.array([17, 5])  # ベクトルB1: 金魚の合計と差 (匹)
+
+# 行列の表示
+print("Matrix A1 (係数行列):")
+print(A1)
+
+# 逆行列の計算
+inv_A1 = np.linalg.inv(A1)  # 逆行列を計算
+print("Inverse of A1 (逆行列):")
+print(inv_A1)
+
+# 逆行列を使って解く
+solution1 = inv_A1.dot(B1)  # 逆行列を用いてxとyを求める
+x, y = solution1
+print(f"① Red fish count: {x}, Blue fish count: {y}")
+
+# 線分図のプロット (赤い金魚と青い金魚)
+plt.figure()
+
+# (1,0)から(1,x)まで赤色で矢印を引く（赤い金魚の数を示す）
+plt.arrow(1, 0, 0, x, head_width=0.1, head_length=0.2, fc='red', ec='red')
+
+# (0,0)から(0,y)まで青色で矢印を引く（青い金魚の数を示す）
+plt.arrow(0, 0, 0, y, head_width=0.1, head_length=0.2, fc='blue', ec='blue')
+
+# プロットの設定
+plt.xlim(-1, 2)  # x軸の範囲を設定
+plt.ylim(-1, max(x, y) + 2)  # y軸の範囲を設定
+plt.grid(True)  # グリッドを表示
+plt.title("Red and Blue Fish Segment Diagram")  # 英語のタイトル
+
+# ラベル
+plt.text(1, x + 0.5, f"Red fish (x): {x}", color='red')  # 英語のラベル (赤い金魚)
+plt.text(0, y + 0.5, f"Blue fish (y): {y}", color='blue')  # 英語のラベル (青い金魚)
+
+plt.show()
+
+# ② 和差算 (人数分のX, Y, Z)
+# X + Y + Z = 40 (枚数)
+# X + 6 = Y (YはXより6枚多い)
+# X + 10 = Z (ZはXより10枚多い)
+# 連立方程式を行列で表現
+# 係数行列 A2 と結果ベクトル B2
+A2 = np.array([[1, 1, 1], [-1, 1, 0], [-1, 0, 1]])  # 行列A2: 係数行列
+B2 = np.array([40, 6, 10])  # ベクトルB2: 合計枚数と差の条件
+
+# 行列の表示
+print("Matrix A2 (係数行列):")
+print(A2)
+
+# 逆行列の計算
+inv_A2 = np.linalg.inv(A2)  # 逆行列を計算
+print("Inverse of A2 (逆行列):")
+print(inv_A2)
+
+# 逆行列を使って解く
+solution2 = inv_A2.dot(B2)  # 逆行列を用いてX, Y, Zを求める
+X, Y, Z = solution2
+print(f"② X: {X}, Y: {Y}, Z: {Z}")
+
+# 線分図のプロット (A, B, C)
+plt.figure()
+
+# A(2,0)→(2,X+a) の矢印（Aの位置からX+6の位置まで）
+plt.arrow(2, 0, 0, X + 6, head_width=0.1, head_length=0.2, fc='green', ec='green')
+
+# B(1,0)→(1,X) の矢印（Bの位置からXの位置まで）
+plt.arrow(1, 0, 0, X, head_width=0.1, head_length=0.2, fc='blue', ec='blue')
+
+# C(0,0)→(0,X+a+b) の矢印（Cの位置からX+6+4の位置まで）
+plt.arrow(0, 0, 0, X + 6 + 4, head_width=0.1, head_length=0.2, fc='red', ec='red')
+
+# プロットの設定
+plt.xlim(-1, 3)  # x軸の範囲を設定
+plt.ylim(-1, max(X + 6 + 4, X + 6) + 2)  # y軸の範囲を設定
+plt.grid(True)  # グリッドを表示
+plt.title("People Segment Diagram")  # 英語のタイトル
+
+# ラベル
+plt.text(2, X + 6 + 0.5, f"A: {X + 6} (pieces)", color='green')  # 英語のラベル (A)
+plt.text(1, X + 0.5, f"B: {X} (pieces)", color='blue')  # 英語のラベル (B)
+plt.text(0, X + 6 + 4 + 0.5, f"C: {X + 6 + 4} (pieces)", color='red')  # 英語のラベル (C)
+
+plt.show()
