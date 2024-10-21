@@ -1,0 +1,58 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.optimize import curve_fit
+
+# データ: 開始からの日数と対応する成長測定値
+# Data: Dates (as days since start) and corresponding growth measurements (manually read)
+days = np.array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23])
+growth = np.array([0, 0, 0, 0, 0, 1, 1, 2, 2, 3, 3, 4, 5, 6, 7, 9, 11, 13, 17, 21, 27, 35, 40, 46])
+
+# ロジスティック成長関数
+# Logistic growth function
+def logistic_growth(x, K, P0, r):
+    """
+    ロジスティック成長曲線関数
+    Logistic growth curve function.
+    
+    Parameters:
+    x (array): 時間値の配列（例: 日数） / Array of time values (e.g., days).
+    K (float): 環境収容力（成長の最大値） / Carrying capacity (the maximum limit of growth).
+    P0 (float): 観測開始時の初期個体数 / Initial population at the start of the observation.
+    r (float): 成長率 / Growth rate.
+    
+    Returns:
+    array: ロジスティック成長モデルに基づく予測成長値 / Predicted growth values based on the logistic growth model.
+    """
+    return K / (1 + ((K - P0) / P0) * np.exp(-r * x))
+
+# 初期パラメータの推定値
+# Initial guess for parameters
+initial_guess = [50, 1, 0.1]  # [環境収容力 (K), 初期個体数 (P0), 成長率 (r) / Carrying capacity (K), initial population (P0), growth rate (r)]
+
+# ロジスティック成長関数を使用して曲線フィッティングを実行
+# Curve fitting using the logistic growth function
+params, covariance = curve_fit(logistic_growth, days, growth, p0=initial_guess)
+
+# 最適化されたパラメータ（K, P0, r）を抽出
+# Extract the optimized parameters for K, P0, and r
+K, P0, r = params
+
+# 最適化されたパラメータに基づいてフィットされた曲線を生成
+# Generate values for the fitted curve based on the optimized parameters
+fitted_growth = logistic_growth(days, K, P0, r)
+
+# 観測データポイントとフィットされたロジスティック成長曲線をプロット
+# Plot the observed data points and the fitted logistic growth curve (English labels)
+plt.figure(figsize=(8, 6))
+plt.scatter(days, growth, color='blue', label='Observed growth')  # 観測データポイント / Observed data points
+plt.plot(days, fitted_growth, color='red', label=f'Logistic fit: K={K:.2f}, P0={P0:.2f}, r={r:.3f}')  # フィットされた曲線 / Fitted curve
+plt.xlabel('Days')  # 横軸のラベル（英語） / Label for the x-axis (English)
+plt.ylabel('Growth (cm or another unit)')  # 縦軸のラベル（英語） / Label for the y-axis (English)
+plt.title('Logistic Growth Curve Fitting for Morning Glory Main Stem')  # グラフのタイトル（英語） / Title of the plot (English)
+plt.legend()  # 凡例を表示 / Show the legend
+plt.grid(True)  # グリッド線を表示 / Display grid lines
+plt.show()
+
+# フィットされたパラメータを表示
+# Display the fitted parameters
+print(f"フィットされたパラメータ / Fitted parameters:\nK (収容力 / Carrying capacity): {K:.2f}\nP0 (初期個体数 / Initial population): {P0:.2f}\nr (成長率 / Growth rate): {r:.3f}")
