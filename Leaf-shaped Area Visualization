@@ -1,0 +1,57 @@
+import matplotlib.pyplot as plt
+import numpy as np
+
+# Side length A of the square / 正方形の辺の長さ A
+A = 5
+
+# Manually set the value of π / 円周率の値を設定
+pi_value = 3.14  # You can change this value to a custom value of pi
+
+# Area calculations / 面積計算
+area_square = A**2  # Area of the square / 正方形の面積
+half_area_square = area_square / 2  # Half of the square's area / 正方形の半分の面積
+quarter_circle_area = (A**2 * pi_value) / 4  # Area of the quarter circle / 4等分した円の面積
+leaf_shape_area = (A**2 * (pi_value - 2)) / 2  # Leaf-shaped region area / 葉状図形の面積
+
+# Display calculated areas in Japanese / 計算結果を日本語で表示
+print(f"正方形の面積: {area_square}")
+print(f"正方形の半分の面積: {half_area_square}")
+print(f"4等分した円の面積: {quarter_circle_area}")
+print(f"葉状図形の面積: {leaf_shape_area}")
+
+# Plotting / プロット
+# Circle equation / 円の方程式
+theta = np.linspace(0, np.pi/2, 100)
+x_circle = A * np.cos(theta)
+y_circle = A * np.sin(theta)
+
+# Triangle vertices / 三角形の頂点座標
+triangle_x = [0, A, 0]
+triangle_y = [0, 0, A]
+
+# Plotting the figure / 図のプロット
+plt.figure(figsize=(8, 8))
+
+# Plot the quarter circle / 4等分円のプロット
+plt.plot(x_circle, y_circle, label='Quarter Circle', color='blue')
+
+# Fill the quarter circle area / 4等分円の領域を塗りつぶす
+plt.fill_between(x_circle, y_circle, color='lightblue', alpha=0.5)
+
+# Plot the triangle / 三角形のプロット
+plt.plot(triangle_x, triangle_y, label='Triangle', color='green')
+
+# Fill the triangle area / 三角形の領域を塗りつぶす
+plt.fill(triangle_x, triangle_y, color='lightgreen', alpha=0.5)
+
+# Points (corners of the square) / 点 (正方形の角)
+plt.plot([A, 0, 0], [0, A, 0], 'ro')  # Plot the corners of the square / 正方形の角のプロット
+
+# Adjust plot settings / プロットの調整
+plt.xlabel('x')
+plt.ylabel('y')
+plt.title('Leaf-shaped Area Visualization')
+plt.axis('equal')
+plt.legend()
+plt.grid(True)
+plt.show()
