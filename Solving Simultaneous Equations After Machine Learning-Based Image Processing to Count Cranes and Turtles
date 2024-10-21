@@ -40,8 +40,18 @@ for file_name in uploaded.keys():
     # 検出結果のクラスごとにラベルを取得してカウント
     for detection in results.pred[0]:
         label = results.names[int(detection[-1])]  # 検出ラベル
+        # バウンディングボックスの情報を取得
+        x_min, y_min, x_max, y_max = detection[:4]
+        width = x_max - x_min
+        height = y_max - y_min
+        aspect_ratio = height / width  # 高さと幅の比率
+
         if label == "turtle":  # "turtle"を亀として扱う
-            turtle_count += 1
+            # 比率が大きければ細長いと判断
+            if aspect_ratio > 1.5:
+                crane_count += 1  # 細長いので鶴とみなす
+            else:
+                turtle_count += 1  # そうでなければ亀
         elif label == "bird":  # "bird"を鶴として扱う
             crane_count += 1
 
