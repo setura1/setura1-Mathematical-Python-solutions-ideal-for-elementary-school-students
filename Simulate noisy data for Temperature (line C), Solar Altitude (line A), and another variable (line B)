@@ -1,0 +1,52 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Function to apply a moving average filter / 移動平均フィルタを適用する関数
+def moving_average(data, window_size):
+    return np.convolve(data, np.ones(window_size)/window_size, mode='same')
+
+# Create time data (0 to 24 hours) / 時刻データの作成 (0～24時)
+time = np.linspace(0, 24, 100)
+
+# Set the random seed for reproducibility / 再現性のために乱数のシードを設定
+np.random.seed(0)
+
+# Simulate noisy data for Temperature (line C), Solar Altitude (line A), and another variable (line B)
+# 温度(Cライン)、太陽高度(Aライン)、他の変数(Bライン)のノイズを含むデータをシミュレート
+temperature_C_noisy = 20 + 10 * np.sin((time - 6) * np.pi / 12) + np.random.normal(0, 1, time.shape)  # ノイズ追加
+solar_altitude_A_noisy = 80 * np.sin((time - 6) * np.pi / 12) + np.random.normal(0, 3, time.shape)  # ノイズ追加
+variable_B_noisy = 25 + 8 * np.sin((time - 8) * np.pi / 12) + np.random.normal(0, 1.5, time.shape)  # ノイズ追加
+
+# Apply moving average filter / 移動平均フィルタを適用
+window_size = 5  # Moving average window size / 移動平均のウィンドウサイズ
+temperature_C = moving_average(temperature_C_noisy, window_size)  # 温度データにフィルタを適用
+solar_altitude_A = moving_average(solar_altitude_A_noisy, window_size)  # 太陽高度データにフィルタを適用
+variable_B = moving_average(variable_B_noisy, window_size)  # 他の変数データにフィルタを適用
+
+# Create the plot / グラフの作成
+fig, ax1 = plt.subplots()
+
+# Plot temperature on the left y-axis / 左のy軸に温度をプロット
+ax1.set_xlabel('Time (hours)')  # 時間（時）
+ax1.set_ylabel('Temperature (°C)', color='black')  # 温度（摂氏）
+ax1.plot(time, temperature_C, 'k-', label='C: Temperature (Smoothed)')  # Cライン（黒色）
+ax1.tick_params(axis='y', labelcolor='black')
+ax1.set_ylim([15, 40])  # y軸の範囲設定
+
+# Plot variable B (another quantity) on the left y-axis / 左のy軸にBラインをプロット
+ax1.plot(time, variable_B, 'r-', label='B: Another Variable (Smoothed)')  # Bライン（赤色）
+
+# Create a second y-axis for the solar altitude / 太陽高度のために右のy軸を作成
+ax2 = ax1.twinx()
+ax2.set_ylabel('Solar Altitude (degrees)', color='green')  # 太陽高度（度）
+ax2.plot(time, solar_altitude_A, 'g-', label='A: Solar Altitude (Smoothed)')  # Aライン（緑色）
+ax2.tick_params(axis='y', labelcolor='green')
+ax2.set_ylim([0, 80])  # 右y軸の範囲設定
+
+# Add legends for each line / 各ラインの凡例を追加
+fig.tight_layout()  # グラフのレイアウト調整
+ax1.legend(loc='upper left')  # 左上に凡例を表示
+ax2.legend(loc='upper right')  # 右上に凡例を表示
+
+# Display the plot / グラフの表示
+plt.show()
