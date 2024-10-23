@@ -1,0 +1,53 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+# 時間軸 (時)
+time = np.array([2, 5])  # 2時から5時の間
+
+# 距離軸 (km)
+distance = np.array([0, 120])  # 甲子園球場とミスター・ツカムの家の距離
+
+# 傾き（速度）の計算
+# ミスター・ツカムの家から甲子園球場へ移動する車の速度
+slope_car_1 = (distance[1] - distance[0]) / (time[1] - time[0])  # 距離/時間
+
+# 甲子園球場からミスター・ツカムの家へ移動する車の速度
+slope_car_2 = (distance[0] - distance[1]) / (time[1] - time[0])  # 距離/時間
+
+# 傾き（速度）の表示
+print(f"Car from Tsukamu's house to stadium speed: {slope_car_1:.2f} km/h")
+print(f"Car from stadium to Tsukamu's house speed: {slope_car_2:.2f} km/h")
+
+# プロットの作成
+plt.figure(figsize=(8, 6))
+
+# ミスター・ツカムの家から甲子園球場に向かう車
+plt.plot(time, distance, label="Car from Tsukamu's house to stadium", color="blue", linewidth=2)
+
+# 甲子園球場からミスター・ツカムの家に向かう車
+plt.plot(time, distance[::-1], label="Car from stadium to Tsukamu's house", color="green", linewidth=2)
+
+# 軸ラベルの設定
+plt.xlabel('Time (hours)', fontsize=12)
+plt.ylabel('Distance (km)', fontsize=12)
+
+# タイトルと凡例の追加
+plt.title('Distance between Tsukamu\'s house and Koshien stadium over time', fontsize=14)
+plt.legend()
+
+# グリッドを表示
+plt.grid(True)
+
+# 軸の範囲設定
+plt.xlim(2, 5)
+plt.ylim(0, 120)
+
+# 交点のプロット
+intersection_time = 3.5  # 交差点の時間
+intersection_distance = 60  # 交差点の距離
+plt.scatter(intersection_time, intersection_distance, color='red', zorder=5)
+plt.text(intersection_time + 0.1, intersection_distance, f'Intersection\n({intersection_time}, {intersection_distance}km)', color='red')
+
+# グラフの表示
+plt.tight_layout()
+plt.show()
