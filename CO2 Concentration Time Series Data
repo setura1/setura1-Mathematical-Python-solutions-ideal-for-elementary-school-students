@@ -1,0 +1,32 @@
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# 二酸化炭素の時系列データを生成する関数 (ランダムウォークに基づく)
+def generate_co2_data(n_days=365, initial_co2=400, daily_change_mean=0.05, daily_change_std=0.2):
+    dates = pd.date_range(start="2024-01-01", periods=n_days, freq='D')
+    co2_levels = [initial_co2]
+    
+    for i in range(1, n_days):
+        daily_change = np.random.normal(daily_change_mean, daily_change_std)
+        co2_levels.append(co2_levels[-1] + daily_change)
+    
+    return pd.DataFrame({'Date': dates, 'CO2_concentration': co2_levels})
+
+# CO2データの生成
+n_days = 365  # データ数（1年間）
+initial_co2 = 400  # 初期CO2濃度 (ppm)
+co2_data = generate_co2_data(n_days=n_days, initial_co2=initial_co2)
+
+# 時系列データをプロット
+plt.figure(figsize=(10, 6))
+plt.plot(co2_data['Date'], co2_data['CO2_concentration'], label='CO2 Concentration', color='green')
+plt.xlabel('Date')
+plt.ylabel('CO2 Concentration (ppm)')
+plt.title('CO2 Concentration Time Series Data')
+plt.grid(True)
+plt.legend()
+
+# プロットの表示
+plt.tight_layout()
+plt.show()
