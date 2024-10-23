@@ -1,0 +1,35 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+# データの定義
+# 「ケヤキ」と「シイ」のデータを手動で近似して定義
+lux_values = np.array([0, 1000, 2000, 3000, 4000])  # 明るさ (ルクス)
+
+# ケヤキのデンプンの増減量
+starch_kezaki = np.array([-15, 0, 18, 20, 20])  # デンプンの増減量 (g)
+
+# シイのデンプンの増減量
+starch_shii = np.array([-15, 0, 8, 8, 8])  # デンプンの増減量 (g)
+
+# グラフの描画
+plt.figure(figsize=(8, 6))
+
+# ケヤキのプロット
+plt.plot(lux_values, starch_kezaki, label='Keyaki', marker='o', color='green')
+
+# シイのプロット
+plt.plot(lux_values, starch_shii, label='Shii', marker='s', color='blue')
+
+# 軸ラベルの設定
+plt.xlabel('Brightness (Lux)', fontsize=12)
+plt.ylabel('Change in Starch per Hour (g)', fontsize=12)
+
+# タイトルと凡例の追加
+plt.title('Relationship Between Brightness and Starch Change', fontsize=14)
+plt.legend()
+
+# グリッドを表示
+plt.grid(True)
+
+# グラフの表示
+plt.show()
