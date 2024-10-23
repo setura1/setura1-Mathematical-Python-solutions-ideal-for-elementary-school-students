@@ -1,0 +1,83 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.linear_model import LinearRegression
+
+# Define the data (approximate data read from the graph)
+# データの定義（グラフから読み取った近似データ）
+volume = np.array([0, 10, 20, 30, 40, 50])  # Volume of NaOH solution (cm^3)
+weight = np.array([0, 3.9, 7.8, 11.7, 14.7, 17.1])  # Weight of remaining solid (g)
+
+# Split the data into two groups
+# データを2つのグループに分割
+volume_group1 = np.array([0, 10, 20])  # First group volumes (cm^3)
+weight_group1 = np.array([0, 3.9, 7.8])  # First group weights (g)
+
+volume_group2 = np.array([40, 50])  # Second group volumes (cm^3)
+weight_group2 = np.array([14.7, 17.1])  # Second group weights (g)
+
+# Create linear regression models for each group
+# 各グループの線形回帰モデルを作成
+model1 = LinearRegression()
+model2 = LinearRegression()
+
+# Reshape the volume data to 2D arrays as required by sklearn
+# sklearnが要求するように体積データを2D配列に変形
+volume_group1 = volume_group1.reshape(-1, 1)
+volume_group2 = volume_group2.reshape(-1, 1)
+
+# Fit the models to the data
+# モデルをデータに適合させる
+model1.fit(volume_group1, weight_group1)
+model2.fit(volume_group2, weight_group2)
+
+# Get the slope and intercept for each model
+# 各モデルの傾きと切片を取得
+slope1, intercept1 = model1.coef_[0], model1.intercept_
+slope2, intercept2 = model2.coef_[0], model2.intercept_
+
+# Calculate the intersection point of the two lines
+# 2つの直線の交点を計算
+if slope1 != slope2:
+    intersection_x = (intercept2 - intercept1) / (slope1 - slope2)
+    intersection_y = slope1 * intersection_x + intercept1
+    print(f"Intersection Point: x = {intersection_x:.2f} cm^3, y = {intersection_y:.2f} g")
+else:
+    intersection_x = None
+    intersection_y = None
+    print("The lines are parallel and do not intersect.")
+
+# Predict weights using the regression models
+# 回帰モデルを使用して重量を予測
+predicted_weight1 = model1.predict(volume_group1)
+predicted_weight2 = model2.predict(volume_group2)
+
+# Plot the data points and regression lines
+# データポイントと回帰直線をプロット
+plt.figure(figsize=(10, 6))
+
+# Plot group 1 data points and regression line
+# グループ1のデータポイントと回帰直線をプロット
+plt.scatter(volume_group1, weight_group1, color='blue', label=f'Data Group 1 (slope = {slope1:.2f})')
+plt.plot(volume_group1, predicted_weight1, color='blue', label='Fit Group 1')
+
+# Plot group 2 data points and regression line
+# グループ2のデータポイントと回帰直線をプロット
+plt.scatter(volume_group2, weight_group2, color='green', label=f'Data Group 2 (slope = {slope2:.2f})')
+plt.plot(volume_group2, predicted_weight2, color='green', label='Fit Group 2')
+
+# If intersection exists, plot it
+# 交点が存在する場合、それをプロット
+if intersection_x is not None and intersection_y is not None:
+    plt.scatter(intersection_x, intersection_y, color='red', label=f'Intersection ({intersection_x:.2f}, {intersection_y:.2f})')
+
+# Customize the plot
+# プロットをカスタマイズ
+plt.xlabel('Volume of NaOH Solution (cm³)')
+plt.ylabel('Weight of Remaining Solid (g)')
+plt.title('Relationship Between Volume and Weight of Remaining Solid')
+plt.legend()
+plt.grid(True)
+
+# Show the plot
+# プロットを表示
+plt.show()
